@@ -1,0 +1,27 @@
+/* Sun-filtered light theme for Quarto website */
+body {
+    background-color: #FFF5E1; /* Warm sunlight background */
+    color: #5A4637; /* Dark brown text for contrast */
+}
+
+a {
+    color: #D08A41; /* Warm orange links */
+}
+
+.navbar, .sidebar {
+    background-color: #FFE4B5; /* Light golden navbar */
+}
+
+.card, .panel {
+    background-color: #FAE3C8; /* Sun-kissed beige panels */
+}
+
+.btn-primary {
+    background-color: #E39D48; /* Warm button color */
+    border-color: #E39D48;
+}
+
+.btn-primary:hover {
+    background-color: #D08A41;
+    border-color: #D08A41;
+}

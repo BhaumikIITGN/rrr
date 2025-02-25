@@ -1,0 +1,65 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Xpo",
+    "section": "",
+    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
+  },
+  {
+    "objectID": "a.html",
+    "href": "a.html",
+    "title": "Faceting: visualizing data with multi-axes subplots using SeaBorn",
+    "section": "",
+    "text": "In this project, we are going to be visualizing data with multi - axis subplots and building structured multi-plot grids using FacetGrid. So, basically, when analysing large datasets with multiple data variables, an efficient method is to create multiple subplots using different subsets of your data. FacetGrid allows for the easy implementation of structured multi-plot grids using the seaborn library, which is built on top of matplotlib."
+  },
+  {
+    "objectID": "a.html#introduction",
+    "href": "a.html#introduction",
+    "title": "Faceting: visualizing data with multi-axes subplots using SeaBorn",
+    "section": "",
+    "text": "In this project, we are going to be visualizing data with multi - axis subplots and building structured multi-plot grids using FacetGrid. So, basically, when analysing large datasets with multiple data variables, an efficient method is to create multiple subplots using different subsets of your data. FacetGrid allows for the easy implementation of structured multi-plot grids using the seaborn library, which is built on top of matplotlib."
+  },
+  {
+    "objectID": "a.html#installation-and-setup",
+    "href": "a.html#installation-and-setup",
+    "title": "Faceting: visualizing data with multi-axes subplots using SeaBorn",
+    "section": "2. Installation and setup",
+    "text": "2. Installation and setup\nFacetGrid is part of the seaborn library of python and only needs seaborn library to be installed along with python 3.8 or higher. The steps for the installation is:\n\\(Windows\\) \\(users\\):\n\nOpen your cmd or powershell(assuming you have installed pip and added it to the environmental variables).\nType pip install seaborn.\nThe library should be installed and now can be used\n\n(errors can occur if python is not installed properly or pip is not recognized)\nfixes: using the terminal inside vs adding pip reinstalling python\n\\(Mac\\) \\(users\\): Open the terminal in Mac. Follow the procedure below to install FacetGrid. The commands are given to the right of the colon (:) and their functionalities on the left.\n\nCheck if Python is installed: python3 –version Expected output: Version.\nCheck if pip is installed: pip3 –version Expected output: Version. Else : python3 -m ensurepip –default-pip\nNow, install Seaborn using pip : pip install seaborn Expected output: Installation. Else: pip install numpy pandas matplotlib\nYou are all set to use your brand new FacetGrid and build stuff! Check if its installed correctly by running : python3 -c “import seaborn as sns; print(sns.__version__)” Expected output : Version."
+  },
+  {
+    "objectID": "a.html#key-features-explanations-and-code",
+    "href": "a.html#key-features-explanations-and-code",
+    "title": "Faceting: visualizing data with multi-axes subplots using SeaBorn",
+    "section": "3. Key Features, Explanations and Code",
+    "text": "3. Key Features, Explanations and Code\n\n\\(Conditional\\) \\(multiplots\\)\n\nFacetGrid allows you to represent data among subsets of your dataset for efficient analysis. This also helps with visualising the data and drawing new insights for data. FacetGrid allows comparison along the three dimensions of row, column and hue.\nThis is done by first creating a FacetGrid object using a DataFrame with the arguments of ‘col’ and ‘row’ and ‘hue’, which will form the grid’s row, column and hue. map_dataframe or map is used to plot graphs onto the grid with individual subsets of the main dataframe, which is sorted by the rows and columns of the FacetGrid object.\nBelow is the working code for the above theory.\n\nimport seaborn as sns\npenguins_df = sns.load_dataset(\"penguins\")\npenguins_df.head()\np = sns.FacetGrid(penguins_df,col='island',row='sex',hue='species',palette='magma')\np.map_dataframe(sns.kdeplot,x='body_mass_g',fill=True)\np.set_axis_labels(x_var='Body mass(g)',y_var='Density')\np.set_titles(col_template='{col_name} Island',row_template='{row_name}')\np.add_legend()\n\n\n\n\n\n\n\n\n\nimport seaborn as sns\npenguins = sns.load_dataset(\"penguins\")\np = sns.FacetGrid(penguins, col='island',hue='sex')\n#Creates a FacetGrid object assigned to p\np.map_dataframe(sns.scatterplot, x='bill_length_mm', y='bill_depth_mm')\n#maps the object to plot and allows you add argument or custom function to you plot\np.set_axis_labels('bill_length_mm', 'bill_depth_mm')\np.set_titles(col_template='{col_name} Island',row_template='{row_name}')\np.add_legend()\n\n\n\n\n\n\n\n\n\n\\(Using\\) \\(Custom\\) \\(functions\\)\n\nFacetGrid also allows you to use custom functions which are not limited to the main matplotlib or seaborn function. Facetgrid requires the custom function to follow some rules mentioned by the official documentation of Facetgrid:\n\nIt must plot onto the “currently active” matplotlib Axes. This will be true of functions in the matplotlib.pyplot namespace, and you can call matplotlib.pyplot.gca() to get a reference to the current Axes if you want to work directly with its methods.\nIt must accept the data that it plots in positional arguments. Internally, FacetGrid will pass a Series of data for each of the named positional arguments passed to FacetGrid.map().\nIt must be able to accept color and label keyword arguments, and, ideally, it will do something useful with them. In most cases, it’s easiest to catch a generic dictionary of **kwargs and pass it along to the underlying plotting function.\n\nBelow is the working code for the above theory.\n\nimport matplotlib.pyplot as plt\nimport numpy as np\nimport seaborn as sns\n#this function plots a mean line for each group and displays it for the given kde plots\n\npenguins = sns.load_dataset(\"penguins\")\n\ndef add_mean_line(data, var=None, **kws): \n    # If there is no variable, then the function is returned \n    if not var: return\n    mean_ = np.mean(data[var])\n    #Get current axis\n    ax = plt.gca()\n    #add line at group mean\n    ax.axvline(mean_, color='crimson',linestyle='--',linewidth=1)\n    #annotate group mean\n    x_pos=0.65\n    if mean_ &gt; 4500: x_pos=0.1\n    ax.text(x_pos, 0.6, f'Mean={mean_:.0f}', \n            transform=ax.transAxes,     #this ensures that the position for the text is taken relative to the axes and not to the data\n            color='k', fontweight='bold', fontsize=10)\n\np = sns.FacetGrid(penguins, row='sex', col='species',hue='sex')\np.map_dataframe(sns.kdeplot, x='body_mass_g', lw=3, fill=True)\np.map_dataframe(add_mean_line, var='body_mass_g')\np.set_titles(row_template='{row_name}', col_template='{col_name} Penguins')\np.add_legend()\n\n\n\n\n\n\n\n\n\n\\(Plotting\\) \\(pair\\) \\(wise\\) \\(data\\) \\(relationships\\) \\(using\\) \\(PairGrid\\)\n\n*Unlike Facetgrid, where each plot shows the same relationship along different levels of variable in rows and columns in the same plot type. PairGrid allows you to see plot with different relationships, like in a matrix where the relationship is decided by the given row and column. The allows you to get a quick summary of the relationship between two variables in a scattered way.\nBelow is the working code for the above theory.\n\nimport seaborn as sns\niris = sns.load_dataset(\"iris\")\ni = sns.PairGrid(iris, hue='species', diag_sharey=False)\ni.map_diag(sns.kdeplot,fill=True) #only plots in the diagonal of the grid\ni.map_lower(sns.scatterplot,alpha=0.6,ec='k') #only plots in the  lower triangle of the grid\ni.map_upper(sns.histplot) #only plots in the  upper triangle of the grid\ni.add_legend()\n\n\n\n\n\n\n\n\n\nPairgrid allows us to have different plots at different locations in our grid. PairGrid also result in the diagonal elements of the grid having the same variables on the x ans y axis. Seaborn can interpret this as a univariant data and allow us to plot univariant plots like histplot, KDE plots, etc. Another consequence of this is that there are mirrored elements in the upper and lower part of the diagonal of the grid."
+  },
+  {
+    "objectID": "a.html#use-cases",
+    "href": "a.html#use-cases",
+    "title": "Faceting: visualizing data with multi-axes subplots using SeaBorn",
+    "section": "4. Use Cases",
+    "text": "4. Use Cases\nFacetgrid is mainly used in those cases where comparative visualizations are required and the data is divided into different categories. Its main purpose is to simplify multi - category analysis. Some of the fields in which the use of FacetGrid may arise are:\n\nMedical & Healthcare Data Analysis\nFinancial Data and Analysis of Stocks\nData analytics which will be used for marketing\nScientific Research and Experimental Data\nSports analytics (See the movie: Moneyball)\nEnvironmental and Climate Analytics\n\nWhich are all data - intensive fields where a lot of data is to be processed, and simple observations and correlations may make a world of difference in any kind of variable. This is why FacetGrid is very powerful in analytics. It’s free visualization!"
+  },
+  {
+    "objectID": "a.html#concluding-remarks",
+    "href": "a.html#concluding-remarks",
+    "title": "Faceting: visualizing data with multi-axes subplots using SeaBorn",
+    "section": "5. Concluding Remarks",
+    "text": "5. Concluding Remarks\nSo, as the sun sets on this introduction, we have learnt about the installation of FacetGrid on various platforms, key features and their explanations with working code which included Conditional Multiplots, Custom Functions, and PairGrid for Pairwise Relationships. We also saw how FacetGrid is used in areas which are data - rich like stocks, sports and market analytics to visualize and make correlations. To sign off, it simplifies multi - category analysis which make datasets more interpretable and insightful."
+  },
+  {
+    "objectID": "a.html#references-and-further-reading",
+    "href": "a.html#references-and-further-reading",
+    "title": "Faceting: visualizing data with multi-axes subplots using SeaBorn",
+    "section": "6. References and Further Reading",
+    "text": "6. References and Further Reading\n\nhttps://seaborn.pydata.org/generated/seaborn.FacetGrid.html\nhttp://youtube.com/watch?v=V_a0-1lU4AU\nhttps://www.youtube.com/watch?v=D4qN59vnSx0\nhttps://www.youtube.com/watch?v=vMNNOwriAbQ"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "The team that was behind this project is:\n\nAawish K Sudhish (24110003)\nBhaumik S Malaviya (24110069)\nParam Tanna (24110236)\n\nWe had a lot of fun and learning while doing this project. We thank professor Nipun Batra for this much amazing quantity and quality of work!"
+  }
+]
